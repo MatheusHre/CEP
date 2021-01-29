@@ -1,24 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import { Info } from './types/info';
+
 
 function App() {
+
+  const [cep, setCep] = useState<String>('')
+
+  const [infos, setInfos] = useState<Info>()
+
+  const getCep = () => {
+    axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(resposta => setInfos(resposta.data))
+  }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input type="text" onChange={(event) => setCep(event.target.value)} />
+      <button onClick={getCep}>Ver CEP</button>
+
+      <h1> Informações :</h1>
+      {
+        <>
+          <p>{infos?.cep}</p>
+          <p>{infos?.localidade}</p>
+          <p>{infos?.logradouro}</p>
+          <p>{infos?.compemento}</p>
+          <p>{infos?.bairro}</p>
+          <p>{infos?.ddd}</p>
+          <p>{infos?.uf}</p>
+          <p>{infos?.gia}</p>
+          <p>{infos?.ibge}</p>
+          <p>{infos?.siafi}</p>
+
+        </>
+      }
     </div>
   );
 }
